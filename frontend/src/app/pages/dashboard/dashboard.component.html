@@ -11,7 +11,7 @@
   
   <div nz-row [nzGutter]="[24, 24]" class="mb-4">
     <!-- Card 1: Tổng nợ -->
-    <div nz-col [nzSpan]="6">
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
       <nz-card class="stat-card">
         <div class="stat-content">
           <div class="stat-info">
@@ -26,7 +26,7 @@
     </div>
     
     <!-- Card 2: Giá trị tồn kho -->
-    <div nz-col [nzSpan]="6">
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
       <nz-card class="stat-card">
         <div class="stat-content">
           <div class="stat-info">
@@ -41,7 +41,7 @@
     </div>
     
     <!-- Card 3: Lô cận date -->
-    <div nz-col [nzSpan]="6">
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
       <nz-card class="stat-card">
         <div class="stat-content">
           <div class="stat-info">
@@ -56,7 +56,7 @@
     </div>
 
     <!-- Card 4: Hết hàng -->
-    <div nz-col [nzSpan]="6">
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
       <nz-card class="stat-card">
         <div class="stat-content">
           <div class="stat-info">
@@ -73,7 +73,7 @@
 
   <div nz-row [nzGutter]="[24, 24]" class="mb-4">
     <!-- Chart: Doanh thu tuần -->
-    <div nz-col [nzSpan]="12">
+    <div nz-col [nzXs]="24" [nzLg]="12">
       <nz-card nzTitle="📈 Doanh thu 7 ngày qua" class="chart-card">
         <div class="bar-chart-container">
           <div class="bar-item" *ngFor="let item of weeklySales">
@@ -88,7 +88,7 @@
     </div>
 
     <!-- Chart: Cơ cấu tồn kho -->
-    <div nz-col [nzSpan]="12">
+    <div nz-col [nzXs]="24" [nzLg]="12">
       <nz-card nzTitle="📊 Cơ cấu Tồn kho (Theo Giá trị)" class="chart-card">
         <div class="donut-chart-layout">
           <!-- Donut -->
@@ -119,7 +119,7 @@
 
   <div nz-row [nzGutter]="[24, 24]">
     <!-- Chart: Top Công nợ -->
-    <div nz-col [nzSpan]="8">
+    <div nz-col [nzXs]="24" [nzLg]="8">
       <nz-card nzTitle="⚠️ Top Khách hàng Nợ nhiều nhất" class="chart-card">
         <div class="debt-list">
           <div class="debt-item" *ngFor="let c of customerDebts; let i = index">
@@ -137,7 +137,7 @@
     </div>
 
     <!-- Table: Sản phẩm bán chạy -->
-    <div nz-col [nzSpan]="16">
+    <div nz-col [nzXs]="24" [nzLg]="16">
       <nz-card nzTitle="🏆 Bảng xếp hạng Tồn kho lớn nhất" class="table-card">
         <nz-table #basicTable [nzData]="topProducts" [nzShowPagination]="false" nzSize="small">
           <thead>
@@ -174,7 +174,7 @@
   <!-- New Row: Bảng doanh thu tháng / năm -->
   <div nz-row [nzGutter]="[24, 24]" class="mt-4">
     <!-- Bảng doanh thu theo tháng -->
-    <div nz-col [nzSpan]="12">
+    <div nz-col [nzXs]="24" [nzLg]="12">
       <ng-template #extraTemplate>
         <nz-select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange($event)" style="width: 120px;">
           <nz-option *ngFor="let y of availableYears" [nzValue]="y" [nzLabel]="'Năm ' + y"></nz-option>
@@ -200,7 +200,7 @@
     </div>
 
     <!-- Bảng doanh thu theo năm -->
-    <div nz-col [nzSpan]="12">
+    <div nz-col [nzXs]="24" [nzLg]="12">
       <nz-card nzTitle="🗓️ Báo cáo Doanh thu (Theo Năm)" class="chart-card">
         <div class="bar-chart-container">
           <div class="bar-item" *ngFor="let item of yearlySalesData">
