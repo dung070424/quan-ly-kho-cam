@@ -1,0 +1,223 @@
+<div class="dashboard-container">
+  <div class="dashboard-header mb-4">
+    <div>
+      <h2>Tổng quan hệ thống</h2>
+      <p class="text-muted">Báo cáo doanh thu và tình trạng kho hàng</p>
+    </div>
+    <div class="header-actions">
+      <nz-tag [nzColor]="'blue'">Cập nhật lúc: Vừa xong</nz-tag>
+    </div>
+  </div>
+  
+  <div nz-row [nzGutter]="[24, 24]" class="mb-4">
+    <!-- Card 1: Tổng nợ -->
+    <div nz-col [nzSpan]="6">
+      <nz-card class="stat-card">
+        <div class="stat-content">
+          <div class="stat-info">
+            <p class="stat-title">TỔNG NỢ PHẢI THU</p>
+            <h3 class="stat-value text-danger">{{ totalDebt | number }} ₫</h3>
+          </div>
+          <div class="stat-icon icon-danger">
+            <span nz-icon nzType="wallet" nzTheme="fill"></span>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+    
+    <!-- Card 2: Giá trị tồn kho -->
+    <div nz-col [nzSpan]="6">
+      <nz-card class="stat-card">
+        <div class="stat-content">
+          <div class="stat-info">
+            <p class="stat-title">GIÁ TRỊ TỒN KHO</p>
+            <h3 class="stat-value text-success">{{ totalInventoryValue | number }} ₫</h3>
+          </div>
+          <div class="stat-icon icon-success">
+            <span nz-icon nzType="gold" nzTheme="fill"></span>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+    
+    <!-- Card 3: Lô cận date -->
+    <div nz-col [nzSpan]="6">
+      <nz-card class="stat-card">
+        <div class="stat-content">
+          <div class="stat-info">
+            <p class="stat-title">LÔ CÁM CẬN DATE</p>
+            <h3 class="stat-value text-warning">{{ nearExpiryCount }} <span class="unit">Lô</span></h3>
+          </div>
+          <div class="stat-icon icon-warning">
+            <span nz-icon nzType="alert" nzTheme="fill"></span>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- Card 4: Hết hàng -->
+    <div nz-col [nzSpan]="6">
+      <nz-card class="stat-card">
+        <div class="stat-content">
+          <div class="stat-info">
+            <p class="stat-title">SẢN PHẨM HẾT HÀNG</p>
+            <h3 class="stat-value text-muted">{{ outOfStockCount }} <span class="unit">Mã</span></h3>
+          </div>
+          <div class="stat-icon icon-muted">
+            <span nz-icon nzType="stop" nzTheme="fill"></span>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="[24, 24]" class="mb-4">
+    <!-- Chart: Doanh thu tuần -->
+    <div nz-col [nzSpan]="12">
+      <nz-card nzTitle="📈 Doanh thu 7 ngày qua" class="chart-card">
+        <div class="bar-chart-container">
+          <div class="bar-item" *ngFor="let item of weeklySales">
+            <div class="bar-value-tooltip">{{ item.value / 1000000 }}M</div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.height.%]="item.heightPercent"></div>
+            </div>
+            <div class="bar-label">{{ item.day }}</div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- Chart: Cơ cấu tồn kho -->
+    <div nz-col [nzSpan]="12">
+      <nz-card nzTitle="📊 Cơ cấu Tồn kho (Theo Giá trị)" class="chart-card">
+        <div class="donut-chart-layout">
+          <!-- Donut -->
+          <div class="donut-wrapper">
+            <nz-progress nzType="dashboard" [nzPercent]="100" [nzSuccessPercent]="categoryStats[0]?.percent || 0" nzStrokeColor="#f59e0b" nzGapDegree="60" [nzStrokeWidth]="12" [nzWidth]="160" [nzFormat]="formatDonut"></nz-progress>
+            <ng-template #formatDonut let-percent>
+              <div class="donut-label">
+                <span class="donut-title">TỔNG</span>
+                <span class="donut-val">{{ (totalInventoryValue / 1000000) | number:'1.0-1' }}M</span>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- Legend / Bars -->
+          <div class="category-bars flex-1">
+            <div class="cat-item" *ngFor="let cat of categoryStats; let i = index">
+              <div class="cat-info">
+                <span class="cat-name">{{ cat.name }}</span>
+                <span class="cat-percent">{{ cat.percent }}%</span>
+              </div>
+              <nz-progress [nzPercent]="cat.percent" [nzShowInfo]="false" [nzStrokeColor]="getCatColor(i)"></nz-progress>
+            </div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="[24, 24]">
+    <!-- Chart: Top Công nợ -->
+    <div nz-col [nzSpan]="8">
+      <nz-card nzTitle="⚠️ Top Khách hàng Nợ nhiều nhất" class="chart-card">
+        <div class="debt-list">
+          <div class="debt-item" *ngFor="let c of customerDebts; let i = index">
+            <div class="debt-info">
+              <span class="debt-name">{{ c.name }}</span>
+              <span class="debt-val text-danger">{{ c.debt | number }} ₫</span>
+            </div>
+            <nz-progress [nzPercent]="c.percent" [nzShowInfo]="false" nzStrokeColor="#ef4444" nzSize="small"></nz-progress>
+          </div>
+          <div *ngIf="customerDebts.length === 0" class="text-center text-muted py-4">
+            Không có khách hàng nợ
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- Table: Sản phẩm bán chạy -->
+    <div nz-col [nzSpan]="16">
+      <nz-card nzTitle="🏆 Bảng xếp hạng Tồn kho lớn nhất" class="table-card">
+        <nz-table #basicTable [nzData]="topProducts" [nzShowPagination]="false" nzSize="small">
+          <thead>
+            <tr>
+              <th>Top</th>
+              <th>Mã hàng</th>
+              <th>Tên sản phẩm</th>
+              <th>Tồn kho</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of basicTable.data | slice:0:5; let i = index">
+              <td>
+                <div class="rank-badge" [ngClass]="'rank-' + (i+1)">{{ i + 1 }}</div>
+              </td>
+              <td><strong>{{ data.id }}</strong></td>
+              <td>{{ data.name }}</td>
+              <td>
+                <span class="qty-text">{{ data.totalQty | number }}</span> <span class="text-muted">{{ data.unit }}</span>
+              </td>
+              <td>
+                <nz-tag *ngIf="data.totalQty > 100" nzColor="success">Dồi dào</nz-tag>
+                <nz-tag *ngIf="data.totalQty <= 100 && data.totalQty > 0" nzColor="warning">Sắp hết</nz-tag>
+                <nz-tag *ngIf="data.totalQty === 0" nzColor="error">Hết hàng</nz-tag>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-card>
+    </div>
+  </div>
+
+  <!-- New Row: Bảng doanh thu tháng / năm -->
+  <div nz-row [nzGutter]="[24, 24]" class="mt-4">
+    <!-- Bảng doanh thu theo tháng -->
+    <div nz-col [nzSpan]="12">
+      <ng-template #extraTemplate>
+        <nz-select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange($event)" style="width: 120px;">
+          <nz-option *ngFor="let y of availableYears" [nzValue]="y" [nzLabel]="'Năm ' + y"></nz-option>
+        </nz-select>
+      </ng-template>
+      <nz-card nzTitle="📅 Báo cáo Doanh thu (Theo Tháng)" [nzExtra]="extraTemplate" class="chart-card">
+        <div class="bar-chart-container">
+          <div class="bar-item" *ngFor="let item of monthlySalesData">
+            <div class="bar-value-tooltip" style="white-space: nowrap;">
+              {{ item.revenue / 1000000 | number:'1.0-0' }}M
+              <br/>
+              <span [ngClass]="item.growth >= 0 ? 'text-success' : 'text-danger'">
+                {{ item.growth > 0 ? '+' : '' }}{{ item.growth }}%
+              </span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.height.%]="item.heightPercent" style="background: linear-gradient(to top, #10b981, #34d399);"></div>
+            </div>
+            <div class="bar-label">{{ item.period }}</div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- Bảng doanh thu theo năm -->
+    <div nz-col [nzSpan]="12">
+      <nz-card nzTitle="🗓️ Báo cáo Doanh thu (Theo Năm)" class="chart-card">
+        <div class="bar-chart-container">
+          <div class="bar-item" *ngFor="let item of yearlySalesData">
+            <div class="bar-value-tooltip" style="white-space: nowrap;">
+              {{ item.revenue / 1000000 | number:'1.0-0' }}M
+              <br/>
+              <span [ngClass]="item.growth >= 0 ? 'text-success' : 'text-danger'">
+                {{ item.growth > 0 ? '+' : '' }}{{ item.growth }}%
+              </span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.height.%]="item.heightPercent" style="background: linear-gradient(to top, #8b5cf6, #a78bfa);"></div>
+            </div>
+            <div class="bar-label">{{ item.period }}</div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>

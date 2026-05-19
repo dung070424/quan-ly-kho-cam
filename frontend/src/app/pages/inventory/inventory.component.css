@@ -1,0 +1,149 @@
+/* CSS for Inventory Component */
+.inventory-container {
+  padding: 0 12px;
+}
+
+h2 {
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: -0.5px;
+  margin-bottom: 0;
+}
+
+/* Card styling */
+::ng-deep .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  border: 1px solid #f1f5f9;
+}
+
+/* Outer table styling */
+::ng-deep .ant-table-thead > tr > th {
+  background-color: #f8fafc !important;
+  color: #475569;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 16px;
+}
+
+::ng-deep .ant-table-tbody > tr > td {
+  font-size: 14px;
+  color: #334155;
+  padding: 16px;
+}
+
+::ng-deep .ant-table-tbody > tr:hover > td {
+  background-color: #f1f5f9 !important;
+}
+
+/* Status colors in main table text */
+.text-primary {
+  color: #0ea5e9 !important;
+}
+
+.text-danger {
+  color: #ef4444 !important;
+  transition: all 0.2s;
+}
+
+.text-danger:hover {
+  color: #b91c1c !important;
+}
+
+/* Inner table container */
+.inner-table-wrapper {
+  margin: 16px 24px 16px 60px;
+  padding: 16px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
+}
+
+/* Inner table header */
+::ng-deep .inner-table-wrapper .ant-table {
+  background: transparent;
+}
+
+::ng-deep .inner-table-wrapper .ant-table-thead > tr > th {
+  background-color: #e2e8f0 !important;
+  color: #334155;
+  font-weight: 600;
+  text-transform: none;
+  font-size: 13px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+::ng-deep .inner-table-wrapper .ant-table-tbody > tr > td {
+  background-color: transparent !important;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 16px;
+}
+
+/* Expanded row background styling */
+::ng-deep .ant-table-expanded-row > td {
+  background-color: #ffffff !important;
+  padding: 0 !important;
+}
+
+/* Tags */
+::ng-deep .ant-tag {
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 12px;
+  border: none;
+  text-align: center;
+  min-width: 80px;
+}
+::ng-deep .ant-tag-success {
+  background-color: #dcfce7;
+  color: #166534;
+}
+::ng-deep .ant-tag-warning {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+::ng-deep .ant-tag-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Buttons */
+::ng-deep .ant-btn-primary {
+  border-radius: 8px;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(59, 130, 246, 0.1);
+  font-weight: 500;
+  transition: all 0.2s;
+}
+::ng-deep .ant-btn-primary:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.2), 0 4px 6px -1px rgba(59, 130, 246, 0.1);
+}
+
+::ng-deep .ant-btn-dashed {
+  border-radius: 6px;
+  border-color: #94a3b8;
+  color: #475569;
+}
+::ng-deep .ant-btn-dashed:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+::ng-deep a {
+  color: #3b82f6;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+::ng-deep a:hover {
+  color: #1d4ed8;
+}

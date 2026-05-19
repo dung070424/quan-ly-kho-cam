@@ -1,0 +1,99 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar"
+            nzCollapsible
+            nzWidth="256px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a href="https://ng.ant.design/" target="_blank">
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+        <h1 *ngIf="!isCollapsed">FEED ERP</h1>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/dashboard">
+          <span nz-icon nzType="dashboard"></span>
+          <span>Tổng quan</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/inventory">
+          <span nz-icon nzType="database"></span>
+          <span>Quản lý Kho</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/pos">
+          <span nz-icon nzType="shopping-cart"></span>
+          <span>Xuất hàng (Bán lẻ)</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/import">
+          <span nz-icon nzType="download"></span>
+          <span>Nhập hàng (Kho)</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/invoices">
+          <span nz-icon nzType="file-text"></span>
+          <span>Quản lý Hóa đơn</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/customers">
+          <span nz-icon nzType="team"></span>
+          <span>Khách hàng & Công nợ</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/reports">
+          <span nz-icon nzType="bar-chart"></span>
+          <span>Báo cáo</span>
+        </a>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <span nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+        </span>
+        <div class="header-right">
+          <div class="header-search">
+            <nz-input-group [nzPrefix]="prefixIconSearch">
+              <input type="text" nz-input placeholder="Tìm kiếm mã hàng, đại lý..."
+                     [(ngModel)]="searchValue"
+                     [nzAutocomplete]="auto"
+                     (ngModelChange)="onSearch($event)" />
+            </nz-input-group>
+            <ng-template #prefixIconSearch>
+              <span nz-icon nzType="search"></span>
+            </ng-template>
+            <nz-autocomplete nzBackfill #auto>
+              <nz-auto-option *ngFor="let option of searchOptions" [nzValue]="option">
+                {{ option }}
+              </nz-auto-option>
+            </nz-autocomplete>
+          </div>
+          <div class="header-actions">
+            <nz-badge [nzCount]="5" class="action-item">
+              <span nz-icon nzType="bell" nzTheme="outline" style="font-size: 20px; cursor: pointer;"></span>
+            </nz-badge>
+            <div class="user-profile action-item">
+              <nz-avatar nzIcon="user" nzSrc="https://api.dicebear.com/7.x/miniavs/svg?seed=1" style="cursor: pointer;"></nz-avatar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

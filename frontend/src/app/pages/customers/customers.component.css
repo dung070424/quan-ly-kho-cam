@@ -1,0 +1,181 @@
+/* Drawer Custom Styles */
+.drawer-header-title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.title-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-right: 12px;
+}
+
+.text-muted {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.customer-profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f3ff 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.profile-avatar-container {
+  margin-right: 20px;
+}
+
+.customer-avatar {
+  background-color: #1890ff;
+  color: white;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid white;
+}
+
+.customer-title-info h3 {
+  margin-bottom: 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.customer-id-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e5e7eb;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.icon-mr {
+  margin-right: 8px;
+}
+
+.mb-4 {
+  margin-bottom: 24px;
+}
+
+.info-card {
+  border-radius: 12px;
+  background-color: #f9fafb;
+  height: 100%;
+}
+
+.info-card .ant-card-body {
+  padding: 20px;
+}
+
+.debt-card {
+  background: linear-gradient(to bottom right, #f6ffed, #d9f8e4);
+  border: 1px solid #b7eb8f;
+}
+
+.debt-card.has-debt {
+  background: linear-gradient(to bottom right, #fff1f0, #ffccc7);
+  border: 1px solid #ffa39e;
+}
+
+.debt-card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+}
+
+.payment-btn {
+  margin-top: 16px;
+  width: 100%;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.contact-card {
+  background-color: #ffffff;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+}
+
+.contact-link {
+  color: #1890ff;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.contact-link:hover {
+  color: #40a9ff;
+  text-decoration: underline;
+}
+
+.address-text {
+  color: #4b5563;
+}
+
+/* History Section */
+.history-section {
+  margin-top: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.section-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+}
+
+.order-count-badge {
+  background-color: #e6f7ff;
+  color: #1890ff;
+  border: 1px solid #91d5ff;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.history-card {
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  overflow: hidden;
+}
+
+.history-card .ant-card-body {
+  padding: 0;
+}
+
+.order-row:hover {
+  background-color: #f9fafb;
+}
+
+.order-id {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.date-text {
+  color: #6b7280;
+  font-size: 13px;
+}

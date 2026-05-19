@@ -1,0 +1,146 @@
+<div class="inventory-container">
+  <div style="display: flex; justify-content: space-between; align-items: center;" class="mb-4">
+    <h2>Quản lý Kho & Hạn sử dụng</h2>
+    <button nz-button nzType="primary" (click)="showAddModal()">
+      <span nz-icon nzType="plus"></span> Thêm sản phẩm
+    </button>
+  </div>
+  
+  <nz-card>
+    <nz-table #nestedTable [nzData]="listOfData" [nzPageSize]="10" nzShowPagination nzSize="middle" nzTableLayout="fixed">
+      <thead>
+        <tr>
+          <th nzWidth="60px"></th>
+          <th nzColumnKey="id" [nzSortFn]="true">Mã hàng</th>
+          <th nzColumnKey="name" [nzSortFn]="true">Tên sản phẩm</th>
+          <th nzColumnKey="category" [nzFilters]="[{text: 'Cám lợn nái', value: 'Cám lợn nái'}, {text: 'Cám lợn con', value: 'Cám lợn con'}, {text: 'Cám lợn thịt', value: 'Cám lợn thịt'}]" [nzFilterFn]="true">Danh mục</th>
+          <th nzColumnKey="price" [nzSortFn]="true">Đơn giá</th>
+          <th nzColumnKey="totalQuantity" [nzSortFn]="true">Tổng tồn kho</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-data [ngForOf]="nestedTable.data">
+          <tr>
+            <td [nzExpand]="!!data.expand" (nzExpandChange)="data.expand = $event"></td>
+            <td><strong>{{ data.id }}</strong></td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.category }}</td>
+            <td class="text-primary"><strong>{{ data.price | number }} ₫</strong></td>
+            <td>{{ data.totalQuantity }} Bao</td>
+            <td>
+              <a (click)="showEditModal(data)">Sửa</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a nz-popconfirm nzPopconfirmTitle="Bạn có chắc chắn muốn xóa?" (nzOnConfirm)="deleteProduct(data.id)" class="text-danger">Xóa</a>
+            </td>
+          </tr>
+          <tr [nzExpand]="!!data.expand">
+            <div class="inner-table-wrapper">
+              <nz-table #innerTable [nzData]="data.batches" nzSize="small" [nzShowPagination]="false">
+                <thead>
+                  <tr>
+                    <th>Số Lô (Batch)</th>
+                    <th nzColumnKey="mfgDate" [nzSortFn]="true">Ngày sản xuất</th>
+                    <th nzColumnKey="expDate" [nzSortFn]="true">Hạn sử dụng</th>
+                    <th>Số lượng</th>
+                    <th>Trạng thái</th>
+                    <th style="width: 150px;">
+                      <button nz-button nzType="dashed" nzSize="small" (click)="showAddBatchModal(data.id)">
+                        <span nz-icon nzType="plus"></span> Nhập lô mới
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let batch of innerTable.data">
+                    <td><strong>{{ batch.batchNo }}</strong></td>
+                    <td>{{ batch.mfgDate | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ batch.expDate | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ batch.quantity }} Bao</td>
+                    <td>
+                      <nz-tag [nzColor]="getStatusColor(batch.status)">{{ batch.status }}</nz-tag>
+                    </td>
+                    <td>
+                      <a nz-popconfirm nzPopconfirmTitle="Xóa lô này?" (nzOnConfirm)="deleteBatch(data.id, batch.batchNo)" class="text-danger">Xóa</a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="data.batches.length === 0">
+                    <td colspan="6" style="text-align: center; color: #64748b;">Chưa có lô hàng nào trong kho</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </tr>
+        </ng-template>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <!-- Add/Edit Product Modal -->
+  <nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="editingId ? 'Sửa thông tin sản phẩm' : 'Thêm sản phẩm mới'" (nzOnCancel)="handleModalCancel()" (nzOnOk)="handleModalOk()">
+    <ng-container *nzModalContent>
+      <form nz-form [formGroup]="productForm" nzLayout="vertical">
+        <nz-form-item>
+          <nz-form-label nzRequired>Mã Sản Phẩm</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập mã!">
+            <input nz-input formControlName="id" [readonly]="!!editingId" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Tên Sản Phẩm</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập tên!">
+            <input nz-input formControlName="name" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Danh mục</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng chọn danh mục!">
+            <nz-select formControlName="category">
+              <nz-option nzValue="Cám lợn nái" nzLabel="Cám lợn nái"></nz-option>
+              <nz-option nzValue="Cám lợn con" nzLabel="Cám lợn con"></nz-option>
+              <nz-option nzValue="Cám lợn thịt" nzLabel="Cám lợn thịt"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Đơn giá</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập đơn giá!">
+            <nz-input-number formControlName="price" [nzMin]="0" [nzStep]="1000" class="full-width"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-container>
+  </nz-modal>
+
+  <!-- Add Batch Modal -->
+  <nz-modal [(nzVisible)]="isBatchModalVisible" nzTitle="Nhập lô hàng mới" (nzOnCancel)="handleBatchModalCancel()" (nzOnOk)="handleBatchModalOk()">
+    <ng-container *nzModalContent>
+      <form nz-form [formGroup]="batchForm" nzLayout="vertical">
+        <nz-form-item>
+          <nz-form-label nzRequired>Số Lô (Batch)</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập số lô!">
+            <input nz-input formControlName="batchNo" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Ngày sản xuất</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng chọn ngày SX!">
+            <input type="date" nz-input formControlName="mfgDate" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Hạn sử dụng</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng chọn hạn sử dụng!">
+            <input type="date" nz-input formControlName="expDate" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Số lượng nhập (Bao)</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập số lượng!">
+            <nz-input-number formControlName="quantity" [nzMin]="1" [nzStep]="10" class="full-width"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-container>
+  </nz-modal>
+</div>

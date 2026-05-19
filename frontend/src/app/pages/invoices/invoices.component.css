@@ -1,0 +1,41 @@
+/* invoices.component.css */
+.invoices-container {
+  padding: 0 12px;
+}
+
+h2 {
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: -0.5px;
+  margin-bottom: 0;
+}
+
+.mb-4 {
+  margin-bottom: 24px;
+}
+
+.mb-2 {
+  margin-bottom: 12px;
+}
+
+.text-primary {
+  color: #2563eb !important;
+}
+
+.text-danger {
+  color: #ef4444 !important;
+}
+
+::ng-deep .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+  border: 1px solid #f1f5f9;
+}
+
+::ng-deep .ant-table-thead > tr > th {
+  background-color: #f8fafc !important;
+  color: #475569;
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 2px solid #e2e8f0;
+}

@@ -1,0 +1,57 @@
+.dashboard-container { padding: 0 12px 24px; }
+.dashboard-header { display: flex; justify-content: space-between; align-items: center; }
+.dashboard-header h2 { font-weight: 800; color: #0f172a; margin-bottom: 4px; font-size: 24px; letter-spacing: -0.5px; }
+.text-muted { color: #64748b; margin-bottom: 0; font-size: 14px; }
+.text-center { text-align: center; }
+.py-4 { padding: 16px 0; }
+.flex-1 { flex: 1; }
+::ng-deep .stat-card { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: all 0.3s; }
+::ng-deep .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+::ng-deep .stat-card .ant-card-body { padding: 24px; }
+.stat-content { display: flex; justify-content: space-between; align-items: center; }
+.stat-title { font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; }
+.stat-value { font-size: 24px; font-weight: 800; margin-bottom: 0; }
+.unit { font-size: 16px; font-weight: 600; }
+.text-danger { color: #ef4444; }
+.text-success { color: #10b981; }
+.text-warning { color: #f59e0b; }
+.stat-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; }
+.icon-danger { background-color: #fee2e2; color: #ef4444; }
+.icon-success { background-color: #d1fae5; color: #10b981; }
+.icon-warning { background-color: #fef3c7; color: #f59e0b; }
+.icon-muted { background-color: #f1f5f9; color: #64748b; }
+::ng-deep .chart-card, ::ng-deep .table-card { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); height: 100%; }
+::ng-deep .chart-card .ant-card-head, ::ng-deep .table-card .ant-card-head { border-bottom: 1px solid #f1f5f9; padding: 16px 24px; }
+::ng-deep .chart-card .ant-card-head-title, ::ng-deep .table-card .ant-card-head-title { font-weight: 700; color: #1e293b; font-size: 16px; }
+::ng-deep .chart-card .ant-card-body { height: calc(100% - 55px); padding: 24px; }
+.bar-chart-container { display: flex; justify-content: space-around; align-items: flex-end; height: 100%; min-height: 200px; padding-top: 24px; }
+.bar-item { display: flex; flex-direction: column; align-items: center; width: 10%; height: 100%; }
+.bar-value-tooltip { font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 8px; opacity: 0; transition: opacity 0.2s; transform: translateY(5px); }
+.bar-item:hover .bar-value-tooltip { opacity: 1; transform: translateY(0); }
+.bar-track { width: 24px; height: 140px; background-color: #f1f5f9; border-radius: 12px; position: relative; overflow: hidden; }
+.bar-fill { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 12px; transition: height 1s ease-out; }
+.bar-item:hover .bar-fill { background: linear-gradient(to top, #2563eb, #3b82f6); }
+.bar-label { margin-top: 12px; font-size: 13px; font-weight: 600; color: #475569; }
+.donut-chart-layout { display: flex; align-items: center; height: 100%; gap: 24px; }
+.donut-wrapper { position: relative; text-align: center; }
+.donut-label { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.donut-title { font-size: 12px; color: #64748b; font-weight: 600; margin-bottom: 2px; }
+.donut-val { font-size: 16px; font-weight: 800; color: #0f172a; }
+.category-bars { width: 100%; }
+.cat-item { margin-bottom: 12px; }
+.cat-item:last-child { margin-bottom: 0; }
+.cat-info { display: flex; justify-content: space-between; margin-bottom: 2px; }
+.cat-name { font-size: 13px; font-weight: 600; color: #334155; }
+.cat-percent { font-size: 13px; font-weight: 700; color: #0f172a; }
+.debt-list { display: flex; flex-direction: column; gap: 16px; height: 100%; overflow-y: auto; }
+.debt-item { display: flex; flex-direction: column; }
+.debt-info { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.debt-name { font-size: 14px; font-weight: 600; color: #1e293b; }
+.debt-val { font-size: 14px; font-weight: 700; }
+::ng-deep .table-card .ant-table-thead > tr > th { background-color: transparent !important; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; border-bottom: 2px solid #f1f5f9; }
+::ng-deep .table-card .ant-table-tbody > tr > td { border-bottom: 1px solid #f8fafc; padding: 12px 16px; }
+.qty-text { font-weight: 700; font-size: 16px; color: #0f172a; }
+.rank-badge { width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 12px; color: #64748b; background-color: #f1f5f9; }
+.rank-1 { background-color: #fef08a; color: #854d0e; }
+.rank-2 { background-color: #e2e8f0; color: #334155; }
+.rank-3 { background-color: #fed7aa; color: #9a3412; }

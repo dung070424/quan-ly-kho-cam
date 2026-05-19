@@ -1,0 +1,57 @@
+<div class="reports-container">
+  <h2 class="mb-4">Báo cáo doanh thu & giao dịch</h2>
+
+  <div nz-row [nzGutter]="24" class="mb-4">
+    <div nz-col [nzSpan]="12">
+      <nz-card>
+        <nz-statistic
+          [nzValue]="(totalRevenue | number)! + ' ₫'"
+          [nzTitle]="'Tổng doanh thu xuất hàng'"
+          [nzPrefix]="prefixTplOne"
+          [nzValueStyle]="{ color: '#009688' }"
+        ></nz-statistic>
+        <ng-template #prefixTplOne><span nz-icon nzType="money-collect"></span></ng-template>
+      </nz-card>
+    </div>
+    
+    <div nz-col [nzSpan]="12">
+      <nz-card>
+        <nz-statistic
+          [nzValue]="totalOrders"
+          [nzTitle]="'Tổng số phiếu xuất'"
+          [nzPrefix]="prefixTplTwo"
+          [nzValueStyle]="{ color: '#1890ff' }"
+        ></nz-statistic>
+        <ng-template #prefixTplTwo><span nz-icon nzType="shopping-cart"></span></ng-template>
+      </nz-card>
+    </div>
+  </div>
+
+  <nz-card nzTitle="Lịch sử xuất hàng (Mới nhất)">
+    <nz-table #basicTable [nzData]="orders" [nzPageSize]="10" nzShowPagination nzSize="middle">
+      <thead>
+        <tr>
+          <th>Mã Phiếu</th>
+          <th>Thời gian</th>
+          <th>Khách hàng</th>
+          <th>Tổng tiền hàng</th>
+          <th>Số tiền khách trả</th>
+          <th>Công nợ sau mua</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td><strong>{{ data.id }}</strong></td>
+          <td>{{ data.date | date:'medium' }}</td>
+          <td>{{ data.customerName }}</td>
+          <td><strong>{{ data.totalAmount | number }} ₫</strong></td>
+          <td class="text-primary">{{ data.paymentAmount | number }} ₫</td>
+          <td class="text-danger">{{ data.newDebt | number }} ₫</td>
+        </tr>
+        <tr *ngIf="orders.length === 0">
+          <td colspan="6" style="text-align: center;">Chưa có dữ liệu xuất hàng</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+</div>

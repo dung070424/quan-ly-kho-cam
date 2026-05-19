@@ -1,0 +1,125 @@
+<div class="invoices-container">
+  <div style="display: flex; justify-content: space-between; align-items: center;" class="mb-4">
+    <h2>Quản lý Hóa Đơn & Phiếu Xuất Nhập</h2>
+  </div>
+
+  <nz-card class="mb-4">
+    <div style="display: flex; gap: 16px; align-items: center;">
+      <div style="flex: 1;">
+        <input nz-input placeholder="🔍 Tìm kiếm theo mã phiếu hoặc tên đối tác..." [(ngModel)]="searchText" (ngModelChange)="onSearchChange()" nzSize="large" />
+      </div>
+      <div style="width: 240px;">
+        <nz-select [(ngModel)]="selectedType" (ngModelChange)="onTypeChange()" nzSize="large" style="width: 100%;">
+          <nz-option nzValue="ALL" nzLabel="Tất cả loại phiếu"></nz-option>
+          <nz-option nzValue="PX" nzLabel="Phiếu Xuất (Bán lẻ)"></nz-option>
+          <nz-option nzValue="PN" nzLabel="Phiếu Nhập (Kho)"></nz-option>
+          <nz-option nzValue="PT" nzLabel="Phiếu Thu (Nợ)"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+  </nz-card>
+
+  <nz-card>
+    <nz-table #invoicesTable [nzData]="filteredOrders" nzSize="middle" [nzPageSize]="10">
+      <thead>
+        <tr>
+          <th>Mã Phiếu</th>
+          <th>Loại Phiếu</th>
+          <th>Đối tác (Khách/NCC)</th>
+          <th>Ngày tạo</th>
+          <th>Tổng tiền hàng</th>
+          <th>Đã thanh toán</th>
+          <th>Nợ mới phát sinh</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of invoicesTable.data">
+          <td><strong>{{ order.id }}</strong></td>
+          <td>
+            <nz-tag [nzColor]="getInvoiceTypeColor(order.id)">
+              {{ getInvoiceTypeName(order.id) }}
+            </nz-tag>
+          </td>
+          <td>{{ order.customerName }}</td>
+          <td>{{ order.date | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="text-primary"><strong>{{ order.totalAmount | number }} ₫</strong></td>
+          <td style="color: #52c41a;"><strong>{{ order.paymentAmount | number }} ₫</strong></td>
+          <td class="text-danger"><strong>{{ order.newDebt | number }} ₫</strong></td>
+          <td>
+            <a (click)="viewDetails(order)">Chi tiết</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-popconfirm nzPopconfirmTitle="Xóa hóa đơn này? Thao tác này sẽ tự động HOÀN TỒN KHO và KHÔI PHỤC CÔNG NỢ tương ứng!" (nzOnConfirm)="deleteInvoice(order.id)" class="text-danger">Xóa</a>
+          </td>
+        </tr>
+        <tr *ngIf="filteredOrders.length === 0">
+          <td colspan="8" style="text-align: center; color: #999; padding: 24px 0;">
+            Không tìm thấy hóa đơn nào phù hợp.
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <!-- Details Modal -->
+  <nz-modal [(nzVisible)]="isDetailsVisible" nzTitle="Chi tiết hóa đơn / chứng từ" [nzWidth]="750" (nzOnCancel)="closeDetails()" [nzFooter]="modalFooter">
+    <ng-template #modalFooter>
+      <button nz-button nzType="primary" (click)="closeDetails()">Đóng</button>
+    </ng-template>
+    
+    <ng-container *nzModalContent>
+      <div *ngIf="selectedOrder" class="invoice-details-modal">
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small" class="mb-4">
+          <nz-descriptions-item nzTitle="Mã Phiếu"><strong>{{ selectedOrder.id }}</strong></nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Loại Phiếu">
+            <nz-tag [nzColor]="getInvoiceTypeColor(selectedOrder.id)">{{ getInvoiceTypeName(selectedOrder.id) }}</nz-tag>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Đối tác">{{ selectedOrder.customerName }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Ngày tạo">{{ selectedOrder.date | date:'dd/MM/yyyy HH:mm:ss' }}</nz-descriptions-item>
+        </nz-descriptions>
+
+        <h4 class="mb-2" style="font-weight: 600;" *ngIf="selectedOrder.items && selectedOrder.items.length > 0">Danh mục hàng hóa</h4>
+        <nz-table #itemsTable [nzData]="selectedOrder.items" nzSize="small" [nzShowPagination]="false" class="mb-4" *ngIf="selectedOrder.items && selectedOrder.items.length > 0">
+          <thead>
+            <tr>
+              <th>Mã hàng</th>
+              <th>Sản phẩm</th>
+              <th *ngIf="selectedOrder.id.startsWith('PX-')">Số Lô (FIFO)</th>
+              <th>Số lượng</th>
+              <th>Đơn giá</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of itemsTable.data">
+              <td>{{ item.productId }}</td>
+              <td>{{ item.name }}</td>
+              <td *ngIf="selectedOrder.id.startsWith('PX-')"><nz-tag nzColor="blue">{{ item.batchNo }}</nz-tag></td>
+              <td>{{ item.quantity }} Bao</td>
+              <td>{{ item.price | number }} ₫</td>
+              <td><strong>{{ (item.quantity * item.price) | number }} ₫</strong></td>
+            </tr>
+          </tbody>
+        </nz-table>
+
+        <div style="background-color: #f8fafc; border-radius: 8px; padding: 16px; border: 1px dashed #cbd5e1; display: flex; justify-content: flex-end;">
+          <div style="width: 280px; font-size: 14px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span>Tổng tiền hàng:</span>
+              <strong>{{ selectedOrder.totalAmount | number }} ₫</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #52c41a;">
+              <span>Đã thanh toán:</span>
+              <strong>- {{ selectedOrder.paymentAmount | number }} ₫</strong>
+            </div>
+            <nz-divider style="margin: 8px 0;"></nz-divider>
+            <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; color: #f5222d;">
+              <span>Nợ phát sinh:</span>
+              <span>{{ selectedOrder.newDebt | number }} ₫</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </nz-modal>
+</div>

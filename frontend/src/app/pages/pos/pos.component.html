@@ -1,0 +1,108 @@
+<div class="pos-container">
+  <div style="display: flex; justify-content: space-between; align-items: center;" class="mb-4">
+    <h2>Tạo Phiếu Xuất Hàng (Bán Hàng)</h2>
+  </div>
+  
+  <div nz-row [nzGutter]="24">
+    <!-- Khu vực chọn hàng (Bên trái) -->
+    <div nz-col [nzSpan]="16">
+      <nz-card nzTitle="Giỏ hàng Xuất">
+        <div class="search-product mb-4">
+          <nz-select
+            class="pos-search-select"
+            nzShowSearch
+            nzAllowClear
+            nzSize="large"
+            nzPlaceHolder="🔍 Nhấn vào đây để chọn hoặc gõ tìm mã hàng/tên sản phẩm..."
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onOptionSelected($event)"
+          >
+            <nz-option *ngFor="let p of products" [nzValue]="p.id" [nzLabel]="p.id + ' - ' + p.name"></nz-option>
+          </nz-select>
+        </div>
+
+        <nz-table #posTable [nzData]="orderItems" [nzShowPagination]="false" nzSize="middle">
+          <thead>
+            <tr>
+              <th>Mã hàng</th>
+              <th>Sản phẩm</th>
+              <th>Lô xuất (FIFO)</th>
+              <th>Số lượng</th>
+              <th>Đơn giá</th>
+              <th>Thành tiền</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of posTable.data; let i = index">
+              <td><strong>{{ item.productId }}</strong></td>
+              <td>{{ item.name }}</td>
+              <td><nz-tag nzColor="blue">{{ item.batchNo }}</nz-tag></td>
+              <td>
+                <nz-input-number [(ngModel)]="item.quantity" [nzMin]="1" [nzMax]="item.maxQuantity!" [nzStep]="1" (ngModelChange)="quantityChange(item)"></nz-input-number>
+              </td>
+              <td>{{ item.price | number }} ₫</td>
+              <td><strong>{{ (item.quantity * item.price) | number }} ₫</strong></td>
+              <td>
+                <button type="button" nz-button nzType="text" nzDanger (click)="removeProduct(i)"><span nz-icon nzType="delete"></span></button>
+              </td>
+            </tr>
+            <tr *ngIf="orderItems.length === 0">
+              <td colspan="7" style="text-align: center; color: #999;">
+                Chưa có mặt hàng nào. Vui lòng gõ tìm sản phẩm ở trên và bấm "Thêm".
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-card>
+    </div>
+
+    <!-- Khu vực Khách hàng & Thanh toán (Bên phải) -->
+    <div nz-col [nzSpan]="8">
+      <nz-card nzTitle="Khách hàng & Thanh toán">
+        <form nz-form [formGroup]="paymentForm" nzLayout="vertical">
+          <nz-form-item>
+            <nz-form-label nzRequired>Khách hàng / Đại lý</nz-form-label>
+            <nz-form-control nzErrorTip="Vui lòng chọn đối tác!">
+              <input nz-input formControlName="customerId" [nzAutocomplete]="autoCustomer" placeholder="Chọn hoặc gõ tên khách lẻ..." nzSize="large" />
+              <nz-autocomplete nzBackfill #autoCustomer>
+                <nz-auto-option *ngFor="let c of customers" [nzValue]="c.name">
+                  {{ c.name }}
+                </nz-auto-option>
+              </nz-autocomplete>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="receipt-summary mt-4">
+            <div class="summary-row">
+              <span class="label">Công nợ cũ:</span>
+              <span class="value">{{ paymentForm.get('oldDebt')?.value || 0 | number }} ₫</span>
+            </div>
+            <div class="summary-row total-row">
+              <span class="label">Tổng tiền hàng:</span>
+              <span class="value text-primary">{{ paymentForm.get('totalAmount')?.value || 0 | number }} ₫</span>
+            </div>
+          </div>
+
+          <nz-form-item class="mt-4 payment-section">
+            <nz-form-label nzRequired>Tiền khách trả</nz-form-label>
+            <nz-form-control nzErrorTip="Số tiền không hợp lệ!">
+              <nz-input-number formControlName="paymentAmount" [nzMin]="0" [nzStep]="10000" nzSize="large" class="full-width text-right payment-input" [nzFormatter]="formatterVND" [nzParser]="parserVND"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="receipt-summary final-debt mt-2">
+            <div class="summary-row new-debt-row">
+              <span class="label">Công nợ mới:</span>
+              <span class="value text-danger">{{ paymentForm.get('newDebt')?.value || 0 | number }} ₫</span>
+            </div>
+          </div>
+
+          <button type="button" nz-button nzType="primary" nzSize="large" nzBlock class="submit-btn mt-4" (click)="submitOrder()">
+            <span nz-icon nzType="check-circle"></span> CHỐT PHIẾU XUẤT
+          </button>
+        </form>
+      </nz-card>
+    </div>
+  </div>
+</div>

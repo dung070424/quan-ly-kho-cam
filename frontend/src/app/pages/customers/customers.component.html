@@ -1,0 +1,194 @@
+<div class="customers-container">
+  <div style="display: flex; justify-content: space-between; align-items: center;" class="mb-4">
+    <h2>Khách hàng & Công nợ</h2>
+    <button nz-button nzType="primary" (click)="showAddModal()">
+      <span nz-icon nzType="plus"></span> Thêm khách hàng
+    </button>
+  </div>
+
+  <nz-card>
+    <nz-table #basicTable [nzData]="customers" nzSize="middle">
+      <thead>
+        <tr>
+          <th>Mã KH</th>
+          <th>Tên Khách Hàng / Đại lý</th>
+          <th>Số điện thoại</th>
+          <th>Địa chỉ</th>
+          <th>Công nợ hiện tại</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td><strong>{{ data.id }}</strong></td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.phone }}</td>
+          <td>{{ data.address }}</td>
+          <td [ngStyle]="{'color': data.oldDebt > 0 ? '#f44336' : '#009688'}">
+            <strong>{{ data.oldDebt | number }} ₫</strong>
+          </td>
+          <td>
+            <a (click)="viewDetails(data)">Chi tiết</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="showEditModal(data)">Sửa</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-popconfirm nzPopconfirmTitle="Bạn có chắc chắn muốn xóa?" (nzOnConfirm)="deleteCustomer(data.id)" class="text-danger">Xóa</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <!-- Add/Edit Modal -->
+  <nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="editingId ? 'Sửa thông tin khách hàng' : 'Thêm khách hàng mới'" (nzOnCancel)="handleModalCancel()" (nzOnOk)="handleModalOk()">
+    <ng-container *nzModalContent>
+      <form nz-form [formGroup]="customerForm" nzLayout="vertical">
+        <nz-form-item>
+          <nz-form-label nzRequired>Mã Khách Hàng</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập mã!">
+            <input nz-input formControlName="id" [readonly]="!!editingId" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Tên Khách Hàng</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập tên!">
+            <input nz-input formControlName="name" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Số điện thoại</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập sđt!">
+            <input nz-input formControlName="phone" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Địa chỉ</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập địa chỉ!">
+            <input nz-input formControlName="address" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Công nợ ban đầu</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập công nợ!">
+            <nz-input-number formControlName="oldDebt" [nzMin]="0" [nzStep]="10000" class="full-width"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-container>
+  </nz-modal>
+
+  <!-- Detail Drawer -->
+  <nz-drawer [nzVisible]="isDrawerVisible" [nzWidth]="720" [nzTitle]="drawerTitle" (nzOnClose)="closeDrawer()">
+    <ng-template #drawerTitle>
+      <div class="drawer-header-title">
+        <span class="title-text">Chi tiết khách hàng</span>
+        <nz-tag *ngIf="selectedCustomer" [nzColor]="selectedCustomer.oldDebt > 0 ? 'error' : 'success'">
+          {{ selectedCustomer.oldDebt > 0 ? 'Có công nợ' : 'Không có nợ' }}
+        </nz-tag>
+      </div>
+    </ng-template>
+
+    <ng-container *nzDrawerContent>
+      <div class="customer-profile-header" *ngIf="selectedCustomer">
+        <div class="profile-avatar-container">
+          <nz-avatar [nzSize]="72" class="customer-avatar" [nzText]="selectedCustomer.name.charAt(0) | uppercase"></nz-avatar>
+        </div>
+        <div class="customer-title-info">
+          <h3>{{ selectedCustomer.name }}</h3>
+          <span class="customer-id-badge"><span nz-icon nzType="idcard" nzTheme="outline" class="icon-mr"></span> {{ selectedCustomer.id }}</span>
+        </div>
+      </div>
+
+      <div class="customer-detail-content" *ngIf="selectedCustomer">
+        <nz-row [nzGutter]="[16, 16]" class="mb-4">
+          <nz-col [nzSpan]="10">
+            <nz-card [nzBordered]="false" class="info-card debt-card" [class.has-debt]="selectedCustomer.oldDebt > 0">
+              <div class="debt-card-content">
+                <nz-statistic 
+                  [nzValue]="(selectedCustomer.oldDebt | number) + ' ₫'"
+                  [nzTitle]="'Công nợ hiện tại'"
+                  [nzValueStyle]="{ color: selectedCustomer.oldDebt > 0 ? '#cf1322' : '#3f8600', fontWeight: 'bold', fontSize: '24px' }"
+                  [nzPrefix]="debtPrefixTpl">
+                </nz-statistic>
+                <ng-template #debtPrefixTpl>
+                  <span nz-icon [nzType]="selectedCustomer.oldDebt > 0 ? 'arrow-up' : 'check-circle'" nzTheme="outline"></span>
+                </ng-template>
+                <button *ngIf="selectedCustomer.oldDebt > 0" nz-button nzType="primary" nzDanger class="payment-btn" (click)="showPaymentModal()">
+                  Thanh toán nợ
+                </button>
+              </div>
+            </nz-card>
+          </nz-col>
+          <nz-col [nzSpan]="14">
+            <nz-card [nzBordered]="false" class="info-card contact-card">
+               <nz-descriptions [nzColumn]="1" nzSize="small">
+                <nz-descriptions-item nzTitle="Số điện thoại">
+                  <ng-container *ngIf="selectedCustomer.phone; else noPhone">
+                    <a [href]="'tel:' + selectedCustomer.phone" class="contact-link"><span nz-icon nzType="phone" nzTheme="outline" class="icon-mr"></span>{{ selectedCustomer.phone }}</a>
+                  </ng-container>
+                  <ng-template #noPhone><span class="text-muted">Chưa cập nhật</span></ng-template>
+                </nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Địa chỉ">
+                  <ng-container *ngIf="selectedCustomer.address; else noAddress">
+                    <span class="address-text"><span nz-icon nzType="environment" nzTheme="outline" class="icon-mr"></span>{{ selectedCustomer.address }}</span>
+                  </ng-container>
+                  <ng-template #noAddress><span class="text-muted">Chưa cập nhật</span></ng-template>
+                </nz-descriptions-item>
+              </nz-descriptions>
+            </nz-card>
+          </nz-col>
+        </nz-row>
+
+        <div class="history-section">
+          <div class="section-header">
+            <h4><span nz-icon nzType="history" nzTheme="outline" class="icon-mr"></span>Lịch sử giao dịch</h4>
+            <span class="order-count-badge">{{ customerOrders.length }} đơn hàng</span>
+          </div>
+          
+          <nz-card [nzBordered]="false" class="history-card">
+            <nz-table #orderTable [nzData]="customerOrders" nzSize="middle" [nzShowPagination]="true" [nzPageSize]="5">
+              <thead>
+                <tr>
+                  <th>Mã Phiếu</th>
+                  <th>Ngày mua</th>
+                  <th>Tổng tiền</th>
+                  <th>Đã trả</th>
+                  <th>Nợ còn lại</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let o of orderTable.data" class="order-row">
+                  <td>
+                    <div style="display: flex; flex-direction: column;">
+                      <span class="order-id">{{ o.id }}</span>
+                      <nz-tag *ngIf="o.totalAmount === 0" nzColor="blue" style="margin-top: 4px; width: fit-content;">Thu nợ</nz-tag>
+                    </div>
+                  </td>
+                  <td><span class="date-text">{{ o.date | date:'dd/MM/yyyy HH:mm' }}</span></td>
+                  <td><strong>{{ o.totalAmount | number }} ₫</strong></td>
+                  <td class="text-primary"><strong>{{ o.paymentAmount | number }} ₫</strong></td>
+                  <td>
+                    <nz-tag *ngIf="o.newDebt > 0" nzColor="error">{{ o.newDebt | number }} ₫</nz-tag>
+                    <nz-tag *ngIf="o.newDebt === 0" nzColor="success">Hết nợ</nz-tag>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </nz-card>
+        </div>
+      </div>
+    </ng-container>
+  </nz-drawer>
+
+  <!-- Payment Modal -->
+  <nz-modal [(nzVisible)]="isPaymentModalVisible" nzTitle="Thanh toán công nợ" (nzOnCancel)="handlePaymentCancel()" (nzOnOk)="handlePaymentOk()" nzOkText="Xác nhận" nzCancelText="Hủy">
+    <ng-container *nzModalContent>
+      <div *ngIf="selectedCustomer" class="payment-modal-content">
+        <p style="margin-bottom: 8px;">Khách hàng: <strong>{{ selectedCustomer.name }}</strong></p>
+        <p style="margin-bottom: 16px;">Công nợ hiện tại: <strong style="color: #cf1322; font-size: 16px;">{{ selectedCustomer.oldDebt | number }} ₫</strong></p>
+        <div style="margin-bottom: 8px; font-weight: 500;">Nhập số tiền thanh toán:</div>
+        <nz-input-number [(ngModel)]="paymentAmount" [nzMin]="1" [nzMax]="selectedCustomer.oldDebt" [nzStep]="10000" style="width: 100%;"></nz-input-number>
+      </div>
+    </ng-container>
+  </nz-modal>
+</div>
