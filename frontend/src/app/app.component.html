@@ -6,49 +6,53 @@
             [(nzCollapsed)]="isCollapsed"
             [nzTrigger]="null">
     <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
+      <a href="https://ng.ant.design/" target="_blank" style="display: flex; align-items: center;">
         <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
         <h1 *ngIf="!isCollapsed">FEED ERP</h1>
       </a>
+      <!-- Mobile Close Button -->
+      <span class="mobile-close-btn" *ngIf="!isCollapsed" (click)="isCollapsed = true">
+        <span nz-icon nzType="close"></span>
+      </span>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-menu-item nzMatchRouter>
+      <li nz-menu-item nzMatchRouter (click)="closeSidebarOnMobile()">
         <a routerLink="/dashboard">
           <span nz-icon nzType="dashboard"></span>
           <span>Tổng quan</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter>
+      <li nz-menu-item nzMatchRouter (click)="closeSidebarOnMobile()">
         <a routerLink="/inventory">
           <span nz-icon nzType="database"></span>
           <span>Quản lý Kho</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter>
+      <li nz-menu-item nzMatchRouter (click)="closeSidebarOnMobile()">
         <a routerLink="/pos">
           <span nz-icon nzType="shopping-cart"></span>
           <span>Xuất hàng (Bán lẻ)</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter>
+      <li nz-menu-item nzMatchRouter (click)="closeSidebarOnMobile()">
         <a routerLink="/import">
           <span nz-icon nzType="download"></span>
           <span>Nhập hàng (Kho)</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter>
+      <li nz-menu-item nzMatchRouter (click)="closeSidebarOnMobile()">
         <a routerLink="/invoices">
           <span nz-icon nzType="file-text"></span>
           <span>Quản lý Hóa đơn</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter>
+      <li nz-menu-item nzMatchRouter (click)="closeSidebarOnMobile()">
         <a routerLink="/customers">
           <span nz-icon nzType="team"></span>
           <span>Khách hàng & Công nợ</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter>
+      <li nz-menu-item nzMatchRouter (click)="closeSidebarOnMobile()">
         <a routerLink="/reports">
           <span nz-icon nzType="bar-chart"></span>
           <span>Báo cáo</span>

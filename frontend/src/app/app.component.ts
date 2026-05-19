@@ -38,4 +38,10 @@ export class AppComponent {
   onSearch(value: string): void {
     this.searchOptions = value ? [value, value + value, value + value + value] : [];
   }
+
+  closeSidebarOnMobile(): void {
+    if (window.innerWidth < 768) {
+      this.isCollapsed = true;
+    }
+  }
 }

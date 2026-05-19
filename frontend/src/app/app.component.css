@@ -55,6 +55,10 @@
   vertical-align: middle;
 }
 
+.mobile-close-btn {
+  display: none;
+}
+
 nz-header {
   padding: 0;
   width: 100%;
@@ -116,6 +120,26 @@ nz-content {
   nz-layout {
     width: 100%;
     min-width: 0;
+  }
+
+  .sidebar-logo {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 16px;
+    padding-left: 16px !important;
+  }
+
+  .mobile-close-btn {
+    display: inline-flex !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .mobile-close-btn:hover {
+    color: #fff !important;
   }
 
   .header-search {
