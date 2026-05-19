@@ -40,7 +40,7 @@ export class AppComponent {
   }
 
   closeSidebarOnMobile(): void {
-    if (window.innerWidth < 768) {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
       this.isCollapsed = true;
     }
   }
